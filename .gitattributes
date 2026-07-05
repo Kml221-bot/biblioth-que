@@ -1,0 +1,6 @@
+# Forcer les fins de ligne LF pour les scripts shell (critique pour Docker sur Windows)
+docker-entrypoint.sh text eol=lf
+*.sh text eol=lf
+
+# Normalisation générale
+* text=auto

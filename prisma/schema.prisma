@@ -1,0 +1,882 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["public", "auth"]
+}
+
+/// Table gérée par Supabase Auth — Prisma ne la modifie pas
+model AuthUser {
+  id String @id @db.Uuid
+
+  @@map("users")
+  @@schema("auth")
+  @@ignore
+}
+
+enum UserRole {
+  STUDENT     @map("user")
+  AUTHOR      @map("author")
+  ADMIN       @map("admin")
+  SUPER_ADMIN @map("super_admin")
+
+  @@map("user_role")
+  @@schema("public")
+}
+
+enum UserStatus {
+  ACTIVE    @map("active")
+  SUSPENDED @map("suspended")
+  DELETED   @map("deleted")
+
+  @@map("user_status")
+  @@schema("public")
+}
+
+enum SubscriptionPlan {
+  FREE              @map("free")
+  STUDENT           @map("student")
+  PREMIUM           @map("premium")
+  SCHOOL            @map("school")
+  SCHOOL_S          @map("school_s")
+  SCHOOL_L          @map("school_l")
+  PACK_INFORMATIQUE @map("pack_informatique")
+  PACK_DROIT        @map("pack_droit")
+  PACK_MEDECINE     @map("pack_medecine")
+  PACK_ECONOMIE     @map("pack_economie")
+
+  @@map("subscription_plan")
+  @@schema("public")
+}
+
+enum SubscriptionStatus {
+  ACTIVE   @map("active")
+  EXPIRED  @map("expired")
+  CANCELED @map("canceled")
+  PENDING  @map("pending")
+
+  @@map("subscription_status")
+  @@schema("public")
+}
+
+enum AuthorStatus {
+  PENDING  @map("pending")
+  APPROVED @map("approved")
+  REJECTED @map("rejected")
+  SUSPENDED @map("suspended")
+
+  @@map("author_status")
+  @@schema("public")
+}
+
+enum TypeAcces {
+  FREE         @map("free")
+  BORROW_ONLY  @map("borrow_only")
+  BUY_ONLY     @map("buy_only")
+  BORROW_OR_BUY @map("borrow_or_buy")
+  PREMIUM      @map("premium")
+
+  @@map("type_acces")
+  @@schema("public")
+}
+
+enum BookStatus {
+  DRAFT     @map("brouillon")
+  PENDING   @map("pending")
+  PUBLISHED @map("publie")
+  SUSPENDED @map("suspendu")
+  ARCHIVED  @map("archive")
+
+  @@map("book_status")
+  @@schema("public")
+}
+
+enum BorrowStatus {
+  ACTIVE          @map("actif")
+  RENEWAL_PENDING @map("prolonge")
+  RETURNED        @map("rendu")
+  OVERDUE         @map("retard")
+  LOST            @map("lost")
+
+  @@map("borrow_status")
+  @@schema("public")
+}
+
+enum PenaltyStatus {
+  PENDING @map("pending")
+  PAID    @map("paid")
+  WAIVED  @map("waived")
+
+  @@map("penalty_status")
+  @@schema("public")
+}
+
+enum TransactionStatus {
+  PENDING   @map("pending")
+  COMPLETED @map("completed")
+  FAILED    @map("failed")
+  CANCELED  @map("canceled")
+  REFUNDED  @map("refunded")
+
+  @@map("transaction_status")
+  @@schema("public")
+}
+
+enum PaymentType {
+  BORROW        @map("borrow")
+  BUY           @map("buy")
+  SUBSCRIPTION  @map("subscription")
+  PENALTY       @map("penalty")
+  MARKETPLACE   @map("marketplace")
+  WALLET_RECHARGE @map("wallet_recharge")
+  RENEWAL       @map("renewal")
+
+  @@map("payment_type")
+  @@schema("public")
+}
+
+enum PaymentProvider {
+  WAVE         @map("wave")
+  ORANGE_MONEY @map("orange_money")
+  NABOOPAY     @map("naboopay")
+  FREE_PLAN    @map("free_plan")
+
+  @@map("payment_provider")
+  @@schema("public")
+}
+
+enum MarketplaceStatus {
+  DRAFT     @map("draft")
+  ACTIVE    @map("active")
+  SOLD      @map("sold")
+  SUSPENDED @map("suspended")
+  ARCHIVED  @map("archived")
+
+  @@map("marketplace_status")
+  @@schema("public")
+}
+
+enum CommunityRole {
+  OWNER     @map("owner")
+  MODERATOR @map("moderator")
+  MEMBER    @map("member")
+
+  @@map("community_role")
+  @@schema("public")
+}
+
+enum CommunityVisibility {
+  PUBLIC  @map("public")
+  PRIVATE @map("private")
+
+  @@map("community_visibility")
+  @@schema("public")
+}
+
+enum PostStatus {
+  PUBLISHED @map("published")
+  HIDDEN    @map("hidden")
+
+  @@map("post_status")
+  @@schema("public")
+}
+
+enum NoteType {
+  NOTE       @map("note")
+  HIGHLIGHT  @map("surlignage")
+  BOOKMARK   @map("signet")
+  QUESTION   @map("question")
+
+  @@map("note_type")
+  @@schema("public")
+}
+
+enum NoteColor {
+  YELLOW @map("yellow")
+  GREEN  @map("green")
+  BLUE   @map("blue")
+  PINK   @map("pink")
+  ORANGE @map("orange")
+
+  @@map("note_color")
+  @@schema("public")
+}
+
+enum NotificationChannel {
+  WHATSAPP @map("whatsapp")
+  EMAIL    @map("email")
+  SMS      @map("sms")
+  PUSH     @map("push")
+  IN_APP   @map("in_app")
+
+  @@map("notification_channel")
+  @@schema("public")
+}
+
+enum NotificationStatus {
+  PENDING @map("pending")
+  SENT    @map("sent")
+  FAILED  @map("failed")
+  READ    @map("read")
+
+  @@map("notification_status")
+  @@schema("public")
+}
+
+enum SupportTicketStatus {
+  OPEN        @map("open")
+  IN_PROGRESS @map("in_progress")
+  RESOLVED    @map("resolved")
+  CLOSED      @map("closed")
+
+  @@map("support_ticket_status")
+  @@schema("public")
+}
+
+model User {
+  id              String     @id @db.Uuid
+  email           String     @unique
+  nom             String     @default("") @map("last_name")
+  prenom          String?    @default("") @map("first_name")
+  whatsappNumber  String?    @map("whatsapp_number")
+  avatarUrl       String?    @map("avatar_url")
+  role            UserRole   @default(STUDENT)
+  status          UserStatus @default(ACTIVE)
+  referralCode    String?    @unique @map("referral_code")
+  coinBalance     Int        @default(0) @map("coin_balance")
+  lastLoginAt     DateTime?  @map("last_login_at")
+  anonymizedAt     DateTime?  @map("anonymized_at")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @default(now()) @updatedAt @map("updated_at")
+
+  subscriptions       Subscription[]
+  authorProfile       AuthorProfile?
+  reviews             BookReview[]
+  borrows             Borrow[]
+  penalties           Penalty[]
+  transactions        Transaction[]
+  sellerListings      MarketplaceListing[] @relation("SellerListings")
+  buyerListings       MarketplaceListing[] @relation("BuyerListings")
+  sentMessages        MarketplaceMessage[] @relation("SentMarketplaceMessages")
+  receivedMessages    MarketplaceMessage[] @relation("ReceivedMarketplaceMessages")
+  ownedCommunities    Community[]          @relation("OwnedCommunities")
+  communityMembers    CommunityMember[]
+  communityPosts      CommunityPost[]
+  notes               BookNote[]
+  noteLikes           BookNoteLike[]
+  readingSessions     ReadingSession[]
+  notifications       Notification[]
+  userBadges          UserBadge[]
+  stats               UserStats?
+  referredAffiliates  Affiliation[]        @relation("AffiliationReferrer")
+  sourceAffiliation   Affiliation?         @relation("AffiliationReferred")
+  supportTickets      SupportTicket[]
+  chapterAccesses     UserChapterAccess[]
+  coinTransactions    CoinTransaction[]
+
+  @@index([role])
+  @@index([status])
+  @@index([createdAt])
+  @@map("profiles")
+  @@schema("public")
+}
+
+model Subscription {
+  id                String             @id @default(uuid()) @db.Uuid
+  userId            String             @map("user_id") @db.Uuid
+  plan              SubscriptionPlan   @default(FREE)
+  status            String             @default("active")
+  empruntsRestants  Int                @default(3) @map("emprunts_restants")
+  autoRenew         Boolean            @default(false) @map("auto_renew")
+  startsAt          DateTime           @default(now()) @map("starts_at")
+  endsAt            DateTime?          @map("ends_at")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@index([userId, status])
+  @@index([plan, status])
+  @@map("subscriptions")
+  @@schema("public")
+}
+
+model AuthorProfile {
+  id               String       @id @default(uuid()) @db.Uuid
+  userId           String       @unique @map("user_id") @db.Uuid
+  bio              String?
+  status           AuthorStatus @default(PENDING)
+  waveAccount      String?      @map("wave_account")
+  soldeDisponible  Int          @default(0) @map("solde_disponible")
+  commissionPct    Decimal      @default(70.00) @map("commission_pct") @db.Decimal(5, 2)
+  approvedAt       DateTime?    @map("approved_at")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  books Book[]
+
+  @@index([status])
+  @@map("author_profiles")
+  @@schema("public")
+}
+
+model Book {
+  id                String     @id @default(uuid()) @db.Uuid
+  titre             String
+  auteur            String
+  authorProfileId   String?    @map("author_profile_id") @db.Uuid
+  description       String?
+  categorie         String
+  filiere           String?
+  typeAcces         String?    @default("gratuit") @map("type_acces")
+  status            BookStatus @default(DRAFT)
+  isbn              String?
+  langue            String     @default("fr")
+  nombrePages       Int?       @map("nombre_pages")
+  coverUrl          String?    @map("cover_url")
+  fileUrl           String?    @map("file_url")
+  extraitUrl        String?    @map("extrait_url")
+  prixAchat         Int        @default(2000) @map("prix_achat")
+  prixLocation7j    Int        @default(500) @map("prix_location_7j")
+  prixLocation30j   Int        @default(800) @map("prix_location_30j")
+  noteMoyenne       Decimal    @default(0.00) @map("note_moyenne") @db.Decimal(3, 2)
+  reviewsCount      Int        @default(0) @map("reviews_count")
+  nbVues            Int        @default(0) @map("nb_vues")
+  nbEmprunts        Int        @default(0) @map("nb_emprunts")
+  featured            Boolean    @default(false)
+  freeChaptersCount   Int        @default(3) @map("free_chapters_count")
+  publishedAt         DateTime?  @map("published_at")
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime   @updatedAt @map("updated_at")
+
+  authorProfile  AuthorProfile?       @relation(fields: [authorProfileId], references: [id], onDelete: Cascade)
+  reviews        BookReview[]
+  borrows        Borrow[]
+  transactions   Transaction[]
+  listings       MarketplaceListing[]
+  notes          BookNote[]
+  readingSessions ReadingSession[]
+  pageTexts      BookPageText[]
+  chapters       Chapter[]
+
+  @@index([categorie])
+  @@index([filiere])
+  @@index([typeAcces])
+  @@index([status, featured])
+  @@index([noteMoyenne])
+  @@index([createdAt])
+  @@map("books")
+  @@schema("public")
+}
+
+model BookPageText {
+  id        String   @id @default(uuid()) @db.Uuid
+  bookId    String   @map("book_id") @db.Uuid
+  page      Int      @map("page_number")
+  content   String
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@unique([bookId, page])
+  @@index([bookId, page])
+  @@map("book_page_texts")
+  @@schema("public")
+}
+
+model BookReview {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  bookId      String   @map("book_id") @db.Uuid
+  note        Int
+  commentaire String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bookId])
+  @@index([bookId, createdAt])
+  @@map("book_reviews")
+  @@schema("public")
+}
+
+model Borrow {
+  id                  String       @id @default(uuid()) @db.Uuid
+  userId              String       @map("user_id") @db.Uuid
+  bookId              String       @map("book_id") @db.Uuid
+  statut              BorrowStatus @default(ACTIVE)
+  debut               DateTime     @default(now())
+  finPrevue           DateTime     @map("fin_prevue")
+  finReelle           DateTime?    @map("fin_reelle")
+  dureeJours          Int          @map("duree_jours")
+  pageActuelle        Int          @default(1) @map("page_actuelle")
+  pourcentageLu       Decimal      @default(0.00) @map("pourcentage_lu") @db.Decimal(5, 2)
+  nbRenouvellements   Int          @default(0) @map("nb_renouvellements")
+  rappelJ3Envoye      Boolean      @default(false) @map("rappel_j3_envoye")
+  rappelJ1Envoye      Boolean      @default(false) @map("rappel_j1_envoye")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book            Book             @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  penalties       Penalty[]
+  readingSessions ReadingSession[]
+
+  @@index([userId, statut])
+  @@index([bookId, statut])
+  @@index([finPrevue, statut])
+  @@map("borrows")
+  @@schema("public")
+}
+
+model Penalty {
+  id          String        @id @default(uuid()) @db.Uuid
+  userId      String        @map("user_id") @db.Uuid
+  borrowId    String        @map("borrow_id") @db.Uuid
+  montantFcfa Int           @map("montant_fcfa")
+  joursRetard Int           @map("jours_retard")
+  status      PenaltyStatus @default(PENDING)
+  reason      String?
+  paidAt      DateTime?     @map("paid_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  borrow       Borrow        @relation(fields: [borrowId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@index([userId, status])
+  @@index([borrowId])
+  @@map("penalties")
+  @@schema("public")
+}
+
+model Transaction {
+  id                 String            @id @default(uuid()) @db.Uuid
+  userId             String            @map("user_id") @db.Uuid
+  bookId             String?           @map("book_id") @db.Uuid
+  listingId          String?           @map("listing_id") @db.Uuid
+  penaltyId          String?           @map("penalty_id") @db.Uuid
+  subscriptionId     String?           @map("subscription_id") @db.Uuid
+  type               PaymentType
+  provider           PaymentProvider   @default(WAVE)
+  status             TransactionStatus @default(PENDING)
+  montantTotal       Int               @map("montant_total")
+  montantCommission  Int               @default(0) @map("montant_commission")
+  montantVendeur     Int               @default(0) @map("montant_vendeur")
+  currency           String            @default("XOF")
+  externalId         String?           @unique @map("external_id")
+  paymentUrl         String?           @map("payment_url")
+  metadata           Json?
+  paidAt             DateTime?         @map("paid_at")
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book         Book?               @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  listing      MarketplaceListing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  penalty      Penalty?            @relation(fields: [penaltyId], references: [id], onDelete: Cascade)
+  subscription Subscription?       @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([type, status])
+  @@index([createdAt])
+  @@map("transactions")
+  @@schema("public")
+}
+
+model MarketplaceListing {
+  id              String            @id @default(uuid()) @db.Uuid
+  sellerId        String            @map("seller_id") @db.Uuid
+  buyerId         String?           @map("buyer_id") @db.Uuid
+  bookId          String            @map("book_id") @db.Uuid
+  titre           String
+  description     String?
+  prixAffiche     Int               @map("prix_affiche")
+  commissionPct   Decimal           @default(10.00) @map("commission_pct") @db.Decimal(5, 2)
+  status          MarketplaceStatus @default(ACTIVE)
+  soldAt          DateTime?         @map("sold_at")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  seller       User                 @relation("SellerListings", fields: [sellerId], references: [id], onDelete: Cascade)
+  buyer        User?                @relation("BuyerListings", fields: [buyerId], references: [id], onDelete: Cascade)
+  book         Book                 @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  messages     MarketplaceMessage[]
+  transactions Transaction[]
+
+  @@index([sellerId, status])
+  @@index([bookId])
+  @@index([status, createdAt])
+  @@map("marketplace_listings")
+  @@schema("public")
+}
+
+model MarketplaceMessage {
+  id          String   @id @default(uuid()) @db.Uuid
+  listingId   String   @map("listing_id") @db.Uuid
+  senderId    String   @map("sender_id") @db.Uuid
+  receiverId  String   @map("receiver_id") @db.Uuid
+  message     String
+  readAt      DateTime? @map("read_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  listing  MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  sender   User               @relation("SentMarketplaceMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User               @relation("ReceivedMarketplaceMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([listingId, createdAt])
+  @@index([receiverId, readAt])
+  @@map("marketplace_messages")
+  @@schema("public")
+}
+
+model Community {
+  id          String              @id @default(uuid()) @db.Uuid
+  ownerId     String              @map("owner_id") @db.Uuid
+  nom         String
+  description String?
+  visibility  CommunityVisibility @default(PUBLIC)
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+
+  owner   User              @relation("OwnedCommunities", fields: [ownerId], references: [id], onDelete: Cascade)
+  members CommunityMember[]
+  posts   CommunityPost[]
+  notes   BookNote[]
+
+  @@index([visibility])
+  @@index([ownerId])
+  @@map("communities")
+  @@schema("public")
+}
+
+model CommunityMember {
+  id          String        @id @default(uuid()) @db.Uuid
+  communityId String        @map("community_id") @db.Uuid
+  userId      String        @map("user_id") @db.Uuid
+  role        CommunityRole @default(MEMBER)
+  joinedAt    DateTime      @default(now()) @map("joined_at")
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, userId])
+  @@index([userId])
+  @@map("community_members")
+  @@schema("public")
+}
+
+model CommunityPost {
+  id          String     @id @default(uuid()) @db.Uuid
+  communityId String     @map("community_id") @db.Uuid
+  authorId    String     @map("author_id") @db.Uuid
+  contenu     String
+  status      PostStatus @default(PUBLISHED)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([communityId, createdAt])
+  @@index([authorId])
+  @@map("community_posts")
+  @@schema("public")
+}
+
+model BookNote {
+  id                    String    @id @default(uuid()) @db.Uuid
+  userId                String    @map("user_id") @db.Uuid
+  bookId                String    @map("book_id") @db.Uuid
+  sharedWithCommunityId String?   @map("shared_with_community_id") @db.Uuid
+  page                  Int
+  type                  NoteType
+  contenu               String?
+  couleur               NoteColor @default(YELLOW)
+  epubcfi               String?   @map("epubcfi")
+  selectedText          String?   @map("selected_text")
+  chapterLabel          String?   @map("chapter_label")
+  likesCount            Int       @default(0) @map("likes_count")
+  isPublic              Boolean   @default(false) @map("is_public")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book      Book       @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  community Community? @relation(fields: [sharedWithCommunityId], references: [id], onDelete: Cascade)
+  likes     BookNoteLike[]
+
+  @@index([userId, bookId])
+  @@index([bookId, page])
+  @@index([sharedWithCommunityId, bookId])
+  @@map("book_notes")
+  @@schema("public")
+}
+
+model BookNoteLike {
+  id        String   @id @default(uuid()) @db.Uuid
+  noteId    String   @map("note_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  note BookNote @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([noteId, userId])
+  @@index([userId])
+  @@map("book_note_likes")
+  @@schema("public")
+}
+
+model ReadingSession {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  bookId         String   @map("book_id") @db.Uuid
+  borrowId       String?  @map("borrow_id") @db.Uuid
+  pageDebut      Int      @default(1) @map("page_debut")
+  pageFin        Int?     @map("page_fin")
+  dureeMinutes   Int      @default(0) @map("duree_minutes")
+  pourcentageLu  Decimal  @default(0.00) @map("pourcentage_lu") @db.Decimal(5, 2)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book   Book    @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  borrow Borrow? @relation(fields: [borrowId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([bookId])
+  @@map("reading_sessions")
+  @@schema("public")
+}
+
+model Notification {
+  id          String              @id @default(uuid()) @db.Uuid
+  userId      String              @map("user_id") @db.Uuid
+  channel     NotificationChannel
+  status      NotificationStatus  @default(PENDING)
+  title       String
+  message     String
+  template    String?
+  payload     Json?
+  sentAt      DateTime?           @map("sent_at")
+  readAt      DateTime?           @map("read_at")
+  createdAt   DateTime            @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([channel, status])
+  @@map("notifications")
+  @@schema("public")
+}
+
+model Badge {
+  id          String    @id @default(uuid()) @db.Uuid
+  code        String    @unique
+  nom         String
+  description String
+  type        String
+  iconUrl     String?   @map("icon_url")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  userBadges UserBadge[]
+
+  @@index([type])
+  @@map("badges")
+  @@schema("public")
+}
+
+model UserBadge {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  badgeId    String   @map("badge_id") @db.Uuid
+  unlockedAt DateTime @default(now()) @map("unlocked_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([badgeId])
+  @@map("user_badges")
+  @@schema("public")
+}
+
+model UserStats {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @unique @map("user_id") @db.Uuid
+  livresLus           Int      @default(0) @map("livres_lus")
+  pagesLues           Int      @default(0) @map("pages_lues")
+  minutesLecture      Int      @default(0) @map("minutes_lecture")
+  streakJours         Int      @default(0) @map("streak_jours")
+  bestStreak          Int      @default(0) @map("best_streak")
+  xp                  Int      @default(0)
+  level               Int      @default(1)
+  biblioCoins         Int      @default(0) @map("biblio_coins")
+  weeklyGoalMinutes   Int      @default(60) @map("weekly_goal_minutes")
+  weeklyProgressMin   Int      @default(0) @map("weekly_progress_min")
+  freezeUsedThisWeek  Boolean  @default(false) @map("freeze_used_this_week")
+  categoriesFavorites String[] @default([]) @map("categories_favorites")
+  lastReadAt          DateTime? @map("last_read_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([streakJours])
+  @@map("user_stats")
+  @@schema("public")
+}
+
+model Affiliation {
+  id          String   @id @default(uuid()) @db.Uuid
+  referrerId  String   @map("referrer_id") @db.Uuid
+  referredId  String   @unique @map("referred_id") @db.Uuid
+  code        String
+  rewardFcfa  Int      @default(0) @map("reward_fcfa")
+  rewardedAt  DateTime? @map("rewarded_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  referrer User @relation("AffiliationReferrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred User @relation("AffiliationReferred", fields: [referredId], references: [id], onDelete: Cascade)
+
+  @@index([referrerId])
+  @@index([code])
+  @@map("affiliations")
+  @@schema("public")
+}
+
+model SupportTicket {
+  id          String              @id @default(uuid()) @db.Uuid
+  userId      String              @map("user_id") @db.Uuid
+  subject     String
+  message     String
+  status      SupportTicketStatus @default(OPEN)
+  priority    Int                 @default(2)
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([status, priority])
+  @@map("support_tickets")
+  @@schema("public")
+}
+
+model ReadingProgress {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @map("user_id") @db.Uuid
+  bookId              String   @map("book_id") @db.Uuid
+  currentPage         Int      @default(1) @map("current_page")
+  totalPages          Int      @default(0) @map("total_pages")
+  pourcentageLu       Decimal  @default(0.00) @map("pourcentage_lu") @db.Decimal(5, 2)
+  tempsLectureMinutes Int      @default(0) @map("temps_lecture_minutes")
+  epubcfi             String?  @map("epubcfi")
+  chapitresLus        Int      @default(0) @map("chapitres_lus")
+  derniereLecture     DateTime @default(now()) @map("derniere_lecture")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, bookId])
+  @@index([userId, derniereLecture])
+  @@map("reading_progress")
+  @@schema("public")
+}
+
+model UserReadingPreferences {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @unique @map("user_id") @db.Uuid
+  theme        String   @default("sepia")
+  fontFamily   String   @default("jakarta") @map("font_family")
+  fontSize     Int      @default(18) @map("font_size")
+  lineHeight   Decimal  @default(1.8) @map("line_height") @db.Decimal(3, 1)
+  margin       String   @default("normal")
+  justified    Boolean  @default(true)
+  brightness   Decimal  @default(1.0) @db.Decimal(3, 2)
+  readingMode  String   @default("paginated") @map("reading_mode")
+  autoNight    Boolean  @default(true) @map("auto_night")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("user_reading_preferences")
+  @@schema("public")
+}
+
+// ═══════════════════════════════════════════════════════
+// Nouveau modèle de monétisation — Pay-per-chapter + Coins
+// ═══════════════════════════════════════════════════════
+
+enum CoinTransactionType {
+  PURCHASE  @map("purchase")   // Achat de pièces (paiement réel)
+  UNLOCK    @map("unlock")     // Déblocage d'un chapitre
+  BONUS     @map("bonus")      // Cadeau / bonus admin
+  REFUND    @map("refund")     // Remboursement
+
+  @@map("coin_transaction_type")
+  @@schema("public")
+}
+
+model Chapter {
+  id           String   @id @default(uuid()) @db.Uuid
+  bookId       String   @map("book_id") @db.Uuid
+  titre        String
+  ordre        Int
+  isFree       Boolean  @default(false) @map("is_free")
+  prixPieces   Int      @default(0) @map("prix_pieces")
+  contentUrl   String?  @map("content_url")
+  description  String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  book     Book                @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  accesses UserChapterAccess[]
+
+  @@unique([bookId, ordre])
+  @@index([bookId])
+  @@map("chapters")
+  @@schema("public")
+}
+
+model UserChapterAccess {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  chapterId  String   @map("chapter_id") @db.Uuid
+  paidPieces Int      @default(0) @map("paid_pieces")
+  unlockedAt DateTime @default(now()) @map("unlocked_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chapterId])
+  @@index([userId])
+  @@map("user_chapter_accesses")
+  @@schema("public")
+}
+
+model CoinTransaction {
+  id          String              @id @default(uuid()) @db.Uuid
+  userId      String              @map("user_id") @db.Uuid
+  type        CoinTransactionType
+  amount      Int
+  balanceAfter Int               @map("balance_after")
+  description String?
+  chapterId   String?            @map("chapter_id") @db.Uuid
+  createdAt   DateTime           @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("coin_transactions")
+  @@schema("public")
+}

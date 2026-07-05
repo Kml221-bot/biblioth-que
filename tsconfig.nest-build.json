@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.nest-check.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": false,
+    "declaration": false,
+    "noEmit": false,
+    "outDir": "dist/nest",
+    "rootDir": "src",
+    "sourceMap": true
+  }
+}
