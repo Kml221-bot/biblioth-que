@@ -6,16 +6,6 @@ datasource db {
   provider = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
-  schemas   = ["public", "auth"]
-}
-
-/// Table gérée par Supabase Auth — Prisma ne la modifie pas
-model AuthUser {
-  id String @id @db.Uuid
-
-  @@map("users")
-  @@schema("auth")
-  @@ignore
 }
 
 enum UserRole {
@@ -25,7 +15,7 @@ enum UserRole {
   SUPER_ADMIN @map("super_admin")
 
   @@map("user_role")
-  @@schema("public")
+
 }
 
 enum UserStatus {
@@ -34,7 +24,7 @@ enum UserStatus {
   DELETED   @map("deleted")
 
   @@map("user_status")
-  @@schema("public")
+
 }
 
 enum SubscriptionPlan {
@@ -50,7 +40,7 @@ enum SubscriptionPlan {
   PACK_ECONOMIE     @map("pack_economie")
 
   @@map("subscription_plan")
-  @@schema("public")
+
 }
 
 enum SubscriptionStatus {
@@ -60,7 +50,7 @@ enum SubscriptionStatus {
   PENDING  @map("pending")
 
   @@map("subscription_status")
-  @@schema("public")
+
 }
 
 enum AuthorStatus {
@@ -70,7 +60,7 @@ enum AuthorStatus {
   SUSPENDED @map("suspended")
 
   @@map("author_status")
-  @@schema("public")
+
 }
 
 enum TypeAcces {
@@ -81,7 +71,7 @@ enum TypeAcces {
   PREMIUM      @map("premium")
 
   @@map("type_acces")
-  @@schema("public")
+
 }
 
 enum BookStatus {
@@ -92,7 +82,7 @@ enum BookStatus {
   ARCHIVED  @map("archive")
 
   @@map("book_status")
-  @@schema("public")
+
 }
 
 enum BorrowStatus {
@@ -103,7 +93,7 @@ enum BorrowStatus {
   LOST            @map("lost")
 
   @@map("borrow_status")
-  @@schema("public")
+
 }
 
 enum PenaltyStatus {
@@ -112,7 +102,7 @@ enum PenaltyStatus {
   WAIVED  @map("waived")
 
   @@map("penalty_status")
-  @@schema("public")
+
 }
 
 enum TransactionStatus {
@@ -123,7 +113,7 @@ enum TransactionStatus {
   REFUNDED  @map("refunded")
 
   @@map("transaction_status")
-  @@schema("public")
+
 }
 
 enum PaymentType {
@@ -136,7 +126,7 @@ enum PaymentType {
   RENEWAL       @map("renewal")
 
   @@map("payment_type")
-  @@schema("public")
+
 }
 
 enum PaymentProvider {
@@ -146,7 +136,7 @@ enum PaymentProvider {
   FREE_PLAN    @map("free_plan")
 
   @@map("payment_provider")
-  @@schema("public")
+
 }
 
 enum MarketplaceStatus {
@@ -157,7 +147,7 @@ enum MarketplaceStatus {
   ARCHIVED  @map("archived")
 
   @@map("marketplace_status")
-  @@schema("public")
+
 }
 
 enum CommunityRole {
@@ -166,7 +156,7 @@ enum CommunityRole {
   MEMBER    @map("member")
 
   @@map("community_role")
-  @@schema("public")
+
 }
 
 enum CommunityVisibility {
@@ -174,7 +164,7 @@ enum CommunityVisibility {
   PRIVATE @map("private")
 
   @@map("community_visibility")
-  @@schema("public")
+
 }
 
 enum PostStatus {
@@ -182,7 +172,7 @@ enum PostStatus {
   HIDDEN    @map("hidden")
 
   @@map("post_status")
-  @@schema("public")
+
 }
 
 enum NoteType {
@@ -192,7 +182,7 @@ enum NoteType {
   QUESTION   @map("question")
 
   @@map("note_type")
-  @@schema("public")
+
 }
 
 enum NoteColor {
@@ -203,7 +193,7 @@ enum NoteColor {
   ORANGE @map("orange")
 
   @@map("note_color")
-  @@schema("public")
+
 }
 
 enum NotificationChannel {
@@ -214,7 +204,7 @@ enum NotificationChannel {
   IN_APP   @map("in_app")
 
   @@map("notification_channel")
-  @@schema("public")
+
 }
 
 enum NotificationStatus {
@@ -224,7 +214,7 @@ enum NotificationStatus {
   READ    @map("read")
 
   @@map("notification_status")
-  @@schema("public")
+
 }
 
 enum SupportTicketStatus {
@@ -234,7 +224,7 @@ enum SupportTicketStatus {
   CLOSED      @map("closed")
 
   @@map("support_ticket_status")
-  @@schema("public")
+
 }
 
 model User {
@@ -282,7 +272,7 @@ model User {
   @@index([status])
   @@index([createdAt])
   @@map("profiles")
-  @@schema("public")
+
 }
 
 model Subscription {
@@ -303,7 +293,7 @@ model Subscription {
   @@index([userId, status])
   @@index([plan, status])
   @@map("subscriptions")
-  @@schema("public")
+
 }
 
 model AuthorProfile {
@@ -323,7 +313,7 @@ model AuthorProfile {
 
   @@index([status])
   @@map("author_profiles")
-  @@schema("public")
+
 }
 
 model Book {
@@ -372,7 +362,7 @@ model Book {
   @@index([noteMoyenne])
   @@index([createdAt])
   @@map("books")
-  @@schema("public")
+
 }
 
 model BookPageText {
@@ -389,7 +379,7 @@ model BookPageText {
   @@unique([bookId, page])
   @@index([bookId, page])
   @@map("book_page_texts")
-  @@schema("public")
+
 }
 
 model BookReview {
@@ -407,7 +397,7 @@ model BookReview {
   @@unique([userId, bookId])
   @@index([bookId, createdAt])
   @@map("book_reviews")
-  @@schema("public")
+
 }
 
 model Borrow {
@@ -436,7 +426,7 @@ model Borrow {
   @@index([bookId, statut])
   @@index([finPrevue, statut])
   @@map("borrows")
-  @@schema("public")
+
 }
 
 model Penalty {
@@ -458,7 +448,7 @@ model Penalty {
   @@index([userId, status])
   @@index([borrowId])
   @@map("penalties")
-  @@schema("public")
+
 }
 
 model Transaction {
@@ -492,7 +482,7 @@ model Transaction {
   @@index([type, status])
   @@index([createdAt])
   @@map("transactions")
-  @@schema("public")
+
 }
 
 model MarketplaceListing {
@@ -519,7 +509,7 @@ model MarketplaceListing {
   @@index([bookId])
   @@index([status, createdAt])
   @@map("marketplace_listings")
-  @@schema("public")
+
 }
 
 model MarketplaceMessage {
@@ -538,7 +528,7 @@ model MarketplaceMessage {
   @@index([listingId, createdAt])
   @@index([receiverId, readAt])
   @@map("marketplace_messages")
-  @@schema("public")
+
 }
 
 model Community {
@@ -558,7 +548,7 @@ model Community {
   @@index([visibility])
   @@index([ownerId])
   @@map("communities")
-  @@schema("public")
+
 }
 
 model CommunityMember {
@@ -574,7 +564,7 @@ model CommunityMember {
   @@unique([communityId, userId])
   @@index([userId])
   @@map("community_members")
-  @@schema("public")
+
 }
 
 model CommunityPost {
@@ -592,7 +582,7 @@ model CommunityPost {
   @@index([communityId, createdAt])
   @@index([authorId])
   @@map("community_posts")
-  @@schema("public")
+
 }
 
 model BookNote {
@@ -621,7 +611,7 @@ model BookNote {
   @@index([bookId, page])
   @@index([sharedWithCommunityId, bookId])
   @@map("book_notes")
-  @@schema("public")
+
 }
 
 model BookNoteLike {
@@ -636,7 +626,7 @@ model BookNoteLike {
   @@unique([noteId, userId])
   @@index([userId])
   @@map("book_note_likes")
-  @@schema("public")
+
 }
 
 model ReadingSession {
@@ -657,7 +647,7 @@ model ReadingSession {
   @@index([userId, createdAt])
   @@index([bookId])
   @@map("reading_sessions")
-  @@schema("public")
+
 }
 
 model Notification {
@@ -678,7 +668,7 @@ model Notification {
   @@index([userId, readAt])
   @@index([channel, status])
   @@map("notifications")
-  @@schema("public")
+
 }
 
 model Badge {
@@ -694,7 +684,7 @@ model Badge {
 
   @@index([type])
   @@map("badges")
-  @@schema("public")
+
 }
 
 model UserBadge {
@@ -709,7 +699,7 @@ model UserBadge {
   @@unique([userId, badgeId])
   @@index([badgeId])
   @@map("user_badges")
-  @@schema("public")
+
 }
 
 model UserStats {
@@ -735,7 +725,7 @@ model UserStats {
 
   @@index([streakJours])
   @@map("user_stats")
-  @@schema("public")
+
 }
 
 model Affiliation {
@@ -753,7 +743,7 @@ model Affiliation {
   @@index([referrerId])
   @@index([code])
   @@map("affiliations")
-  @@schema("public")
+
 }
 
 model SupportTicket {
@@ -771,7 +761,7 @@ model SupportTicket {
   @@index([userId, status])
   @@index([status, priority])
   @@map("support_tickets")
-  @@schema("public")
+
 }
 
 model ReadingProgress {
@@ -791,7 +781,7 @@ model ReadingProgress {
   @@unique([userId, bookId])
   @@index([userId, derniereLecture])
   @@map("reading_progress")
-  @@schema("public")
+
 }
 
 model UserReadingPreferences {
@@ -810,7 +800,7 @@ model UserReadingPreferences {
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("user_reading_preferences")
-  @@schema("public")
+
 }
 
 // ═══════════════════════════════════════════════════════
@@ -824,7 +814,7 @@ enum CoinTransactionType {
   REFUND    @map("refund")     // Remboursement
 
   @@map("coin_transaction_type")
-  @@schema("public")
+
 }
 
 model Chapter {
@@ -845,7 +835,7 @@ model Chapter {
   @@unique([bookId, ordre])
   @@index([bookId])
   @@map("chapters")
-  @@schema("public")
+
 }
 
 model UserChapterAccess {
@@ -861,7 +851,7 @@ model UserChapterAccess {
   @@unique([userId, chapterId])
   @@index([userId])
   @@map("user_chapter_accesses")
-  @@schema("public")
+
 }
 
 model CoinTransaction {
@@ -878,5 +868,5 @@ model CoinTransaction {
 
   @@index([userId, createdAt])
   @@map("coin_transactions")
-  @@schema("public")
+
 }
