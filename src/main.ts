@@ -96,7 +96,7 @@ async function bootstrap() {
   }
 
   const port = configService.get<number>("app.port", 3001);
-  await app.listen(port);
+  await app.listen(port, "0.0.0.0");
   winstonLogger.log(`BiblioTech API demarree sur http://localhost:${port}/api`, "Bootstrap");
   winstonLogger.log(
     enableSwagger
