@@ -47,6 +47,9 @@ RUN npm ci --omit=dev --ignore-scripts
 # Code compilé
 COPY --from=builder /app/dist/nest      ./dist/nest
 
+# Scripts
+COPY --from=builder /app/scripts ./scripts
+
 # Client Prisma généré (évite de le régénérer au runtime)
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
