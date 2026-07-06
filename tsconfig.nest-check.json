@@ -8,6 +8,7 @@
     "experimentalDecorators": true,
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "target": "ES2022",
     "noEmit": true,
     "types": ["node", "jest"]
   }
