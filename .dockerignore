@@ -1,0 +1,45 @@
+# ── Dépendances (réinstallées dans le build) ────────────────
+node_modules/
+.pnpm-store/
+
+# ── Build artifacts ─────────────────────────────────────────
+dist/
+.next/
+build/
+coverage/
+
+# ── Frontend (déployé sur Vercel, pas dans le conteneur) ────
+client/
+
+# ── Fichiers de config locaux ────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Git ─────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── Logs ────────────────────────────────────────────────────
+*.log
+.dev-*.out
+.dev-*.err
+
+# ── Tests ───────────────────────────────────────────────────
+**/*.test.ts
+**/*.spec.ts
+test/
+coverage/
+
+# ── Outils de développement ─────────────────────────────────
+.vscode/
+.idea/
+*.sw?
+.DS_Store
+Thumbs.db
+
+# ── Docs et scripts non essentiels ──────────────────────────
+*.md
+PROMPT_*.txt
+.codex-smoke/
+.github/

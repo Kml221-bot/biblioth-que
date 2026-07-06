@@ -1,0 +1,1 @@
+import{r as a}from"./react-core-DMeigGRh.js";import{b0 as o}from"./vendor-BLw7466y.js";const n=()=>({showToast:a.useCallback((r,s="info")=>{switch(s){case"success":o.success(r);break;case"error":o.error(r);break;case"warning":o.warning(r);break;default:o.info(r);break}},[])});export{n as u};
