@@ -8,7 +8,7 @@
   "deploy": "gh-pages -d dist/public",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:nest\" \"npm run dev:client\"",
     "dev:full": "concurrently \"npm run dev:server\" \"npm run dev:nest\" \"npm run dev:client\"",
-    "build": "vite build --configLoader runner && tsc -p tsconfig.server.json",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build --configLoader runner && tsc -p tsconfig.server.json",
     "start": "node -e \"process.env.NODE_ENV='production'; import('./dist/index.js')\"",
     "preview": "vite preview --host --configLoader runner",
     "check": "tsc --noEmit",

@@ -121,18 +121,18 @@ describe("getEpubAnnotations", () => {
     expect(result).toEqual([]);
   });
 
-  it("mappe couleur enum 'green' → hex '#A7F3D0'", async () => {
-    set([makeAnnotationRow({ couleur: "green" })]);
+  it("mappe couleur enum 'vert' → hex '#A7F3D0'", async () => {
+    set([makeAnnotationRow({ couleur: "vert" })]);
     const [ann] = await getEpubAnnotations("user-1", "book-1");
     expect(ann.color).toBe("#A7F3D0");
   });
 
   it("mappe toutes les couleurs DB→hex correctement", async () => {
     const mapping: Record<string, string> = {
-      yellow: "#FDE68A",
-      green:  "#A7F3D0",
-      blue:   "#BFDBFE",
-      pink:   "#FBCFE8",
+      jaune: "#FDE68A",
+      vert:  "#A7F3D0",
+      bleu:   "#BFDBFE",
+      violet:   "#FBCFE8",
       orange: "#FED7AA",
     };
 
@@ -173,9 +173,9 @@ describe("getEpubAnnotations", () => {
 
   it("retourne plusieurs annotations dans l'ordre correct", async () => {
     set([
-      makeAnnotationRow({ id: "ann-1", couleur: "yellow" }),
-      makeAnnotationRow({ id: "ann-2", couleur: "blue" }),
-      makeAnnotationRow({ id: "ann-3", couleur: "pink" }),
+      makeAnnotationRow({ id: "ann-1", couleur: "jaune" }),
+      makeAnnotationRow({ id: "ann-2", couleur: "bleu" }),
+      makeAnnotationRow({ id: "ann-3", couleur: "violet" }),
     ]);
     const anns = await getEpubAnnotations("user-1", "book-1");
 
