@@ -114,7 +114,9 @@ export default function Dashboard() {
         setDashboardError(
           err instanceof Error
             ? err.message
-            : 'Impossible de charger les donnees du dashboard depuis Supabase.'
+            : (err && typeof err === 'object' && 'message' in err)
+              ? String((err as any).message)
+              : 'Impossible de charger les donnees du dashboard depuis Supabase.'
         );
       } finally {
         if (mounted) setIsDashboardLoading(false);

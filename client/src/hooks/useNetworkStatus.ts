@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Hook indicateur de connexion en temps réel
-// Détecte si l'utilisateur est en ligne ou hors-ligne
-// ============================================================
 
 import { useState, useEffect, useCallback } from 'react';
 

@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech Admin — Configuration Système (Section G)
-// Paramètres modifiables sans toucher au code
-// ============================================================
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';

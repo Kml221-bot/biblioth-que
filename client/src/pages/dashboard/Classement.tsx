@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Classement des lecteurs (Leaderboard)
-// Top lecteurs par XP — recommandation du rapport de veille
-// ============================================================
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -279,7 +275,7 @@ export default function Classement() {
         {/* Explication du calcul */}
         <div className="rounded-xl bg-muted/30 p-4 text-xs text-muted-foreground space-y-1">
           <p className="font-semibold text-foreground text-sm mb-2">Comment gagner de l'XP ?</p>
-          <p>📚 +10 XP par livre emprunté</p>
+          <p>📚 +10 XP par livre lu</p>
           <p>🔥 +5 à +50 XP bonus selon la régularité de lecture (streak)</p>
           <p>🏆 +50 XP par badge débloqué</p>
           <p>⏱️ +1 XP par minute de lecture</p>

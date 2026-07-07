@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Hook de préférences de lecture
-// Partagé entre EPUB et PDF. Persiste localStorage + sync DB.
-// ============================================================
 
 import { useState, useEffect, useCallback } from 'react';
 

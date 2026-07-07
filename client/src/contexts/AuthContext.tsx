@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Contexte d'authentification (Supabase Auth)
-// Gère inscription, connexion, déconnexion, sessions
-// ============================================================
 
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { supabase } from '@/lib/supabase';

@@ -2,8 +2,15 @@ import { createCipheriv, createHash, randomBytes, randomUUID } from "crypto";
 import { Router } from "express";
 import type { NextFunction, Request, Response } from "express";
 import { supabaseAdmin } from "../lib/supabase.js";
-import { signedUrlExpiresAt } from "../services/domainRules.js";
+import { signedUrlExpiresAt, canBorrowForPlan } from "../services/domainRules.js";
 import { validate, uuidParams } from "../lib/validate.js";
+
+// Helper for dates
+const addDays = (date: Date, days: number) => {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+};
 
 const router = Router();
 
@@ -14,6 +21,7 @@ interface AuthContext {
   email: string;
   plan: string;
   is_active: boolean;
+  emprunts_restants: number;
 }
 
 interface ReaderRequest extends Request {
@@ -86,7 +94,7 @@ async function requireAuth(req: ReaderRequest, res: Response, next: NextFunction
 
   const { data: profile, error: profileError } = await supabaseAdmin
     .from("profiles")
-    .select("id,email,plan,is_active")
+    .select("id,email,plan,is_active,emprunts_restants")
     .eq("id", authData.user.id)
     .single();
 
@@ -100,6 +108,7 @@ async function requireAuth(req: ReaderRequest, res: Response, next: NextFunction
     email: profile.email,
     plan: profile.plan,
     is_active: profile.is_active,
+    emprunts_restants: profile.emprunts_restants || 0,
   };
   next();
 }
@@ -186,9 +195,7 @@ async function hasActiveSubscription(userId: string): Promise<boolean> {
 }
 
 async function getAccessReason(user: AuthContext, book: BookRow): Promise<AccessReason | null> {
-  if (book.type === "gratuit") return "free";
-
-  // ⚡ OPTIMISATION: Exécuter les 3 requêtes en parallèle au lieu de séquentiellement
+  // ⚡ OPTIMISATION: Exécuter les 3 requêtes en parallèle
   const [borrow, purchase, subscription] = await Promise.all([
     hasActiveBorrow(user.id, book.id),
     hasPurchase(user.id, book.id),
@@ -196,9 +203,64 @@ async function getAccessReason(user: AuthContext, book: BookRow): Promise<Access
   ]);
 
   if (purchase) return "purchase";
+  if (subscription) {
+    if (!borrow) await autoCreateLecture(user, book);
+    return "subscription";
+  }
   if (borrow) return "borrow";
-  if (subscription) return "subscription";
+  if (book.type === "gratuit") {
+    if (!borrow) await autoCreateLecture(user, book);
+    return "free";
+  }
+
+  // If no access yet, and the book is payant, check if we can use a quota (for legacy/free plans)
+  if (canBorrowForPlan(user.plan, user.emprunts_restants)) {
+    await autoCreateLecture(user, book, true); // true = decrement quota
+    return "borrow";
+  }
+
   return null;
+}
+
+// Fonction pour ajouter automatiquement à "Mes Lectures" (table borrows)
+async function autoCreateLecture(user: AuthContext, book: BookRow, decrementQuota = false) {
+  const now = new Date();
+  const { data: newBorrow, error } = await supabaseAdmin
+    .from("borrows")
+    .insert({
+      user_id: user.id,
+      book_id: book.id,
+      debut: now.toISOString(),
+      fin_prevue: addDays(now, 30).toISOString(), // 30 jours par defaut, meme si cache dans l'UI
+      statut: "actif",
+      duree_jours: 30,
+      prix_location_fcfa: 0,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    console.error("Erreur auto-creation lecture:", error);
+    return;
+  }
+
+  if (decrementQuota) {
+    await supabaseAdmin
+      .from("profiles")
+      .update({ emprunts_restants: Math.max(0, (user.emprunts_restants || 0) - 1) })
+      .eq("id", user.id);
+  }
+
+  // Creer l'entree de progression
+  await supabaseAdmin.from("reading_progress").upsert({
+    user_id: user.id,
+    book_id: book.id,
+    current_page: 0,
+    total_pages: Number(book.pages_count || 0),
+    pourcentage_lu: 0,
+    temps_lecture_minutes: 0,
+    derniere_lecture: now.toISOString(),
+  }, { onConflict: "user_id,book_id" });
 }
 
 async function logReaderAccess(

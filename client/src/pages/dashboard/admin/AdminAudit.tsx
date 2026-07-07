@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech Admin — Journal d'Audit (Section I)
-// Historique des actions administrateurs (append-only)
-// ============================================================
 
 import React, { useState } from 'react';
 import { FileText, ChevronDown, ChevronRight, Shield, Search } from 'lucide-react';

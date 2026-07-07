@@ -83,26 +83,12 @@ export default function Recommandations() {
     };
   }, [isInitializing, user?.id, user?.preferredCategories]);
 
-  const handleBorrow = async (book: GoogleBook) => {
+  const handleRead = (book: GoogleBook) => {
     if (!user?.id) {
-      showToast('Connecte-toi pour emprunter un livre.', 'warning');
+      showToast('Connecte-toi pour lire un livre.', 'warning');
       return;
     }
-
-    if (borrowedBookIds.has(book.id)) {
-      showToast(`"${book.title}" est deja emprunte`, 'warning');
-      return;
-    }
-
-    try {
-      await borrowBookInSupabase(user.id, book.id);
-      setBorrowedBookIds(prev => new Set(prev).add(book.id));
-      setBooks(prev => prev.filter(item => item.id !== book.id));
-      window.dispatchEvent(new Event('borrowsUpdated'));
-      showToast(`Vous avez emprunte "${book.title}" avec succes !`, 'success');
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Erreur', 'error');
-    }
+    navigate(`/reader/${book.id}`);
   };
 
   return (
@@ -212,11 +198,11 @@ export default function Recommandations() {
                       </div>
 
                       <button
-                        onClick={() => handleBorrow(book)}
+                        onClick={() => handleRead(book)}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:shadow-md transition-all duration-200"
                       >
                         <BookMarked className="w-4 h-4" />
-                        {borrowedBookIds.has(book.id) ? 'Deja emprunte' : 'Emprunter'}
+                        {borrowedBookIds.has(book.id) ? 'Continuer la lecture' : 'Lire'}
                       </button>
                     </CardBody>
                   </Card>

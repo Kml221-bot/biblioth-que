@@ -1,9 +1,3 @@
-// ============================================================
-// BiblioTech — Barre d'accessibilité inclusive
-// Taille texte | Contraste | Dyslexie | Lecture vocale |
-// Raccourcis clavier | Malentendants
-// ============================================================
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {

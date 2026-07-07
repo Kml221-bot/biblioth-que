@@ -12,7 +12,7 @@ import {
 
 const BOOK_CATEGORIES = [
   'Informatique & Cybersécurité', 'Développement Personnel', 'Littérature Africaine & Sénégalaise',
-  'Économie & Business', 'Dark Romance & Fiction', 'Aventure',
+  'Économie & Business', 'Dark Romance & Fiction', 'Roman', 'Aventure',
   'Mangas & Bandes Dessinées', 'Droit & Sciences Politiques', 'Sciences & Mathématiques',
   'Manuels Universitaires & Annales',
 ];

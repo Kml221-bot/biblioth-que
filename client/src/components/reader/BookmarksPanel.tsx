@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Panneau des marque-pages EPUB
-// Liste des marque-pages avec navigation et gestion
-// ============================================================
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

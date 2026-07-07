@@ -1,8 +1,3 @@
-// ============================================================
-// BiblioTech — Service EPUB Supabase
-// Sauvegarde/récupère annotations, marque-pages, progression
-// et préférences de lecture EPUB dans Supabase
-// ============================================================
 
 import { supabase } from '@/lib/supabase';
 

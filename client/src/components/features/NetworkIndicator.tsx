@@ -1,8 +1,3 @@
-// ============================================================
-// BiblioTech — Composant indicateur de connexion
-// Affiche un bandeau quand l'utilisateur est hors-ligne
-// et une notification quand il revient en ligne
-// ============================================================
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Types de la base de données Supabase
-// Générés à partir du schéma SQL (001_initial_schema.sql)
-// ============================================================
 
 // ── Enums ────────────────────────────────────────────────────
 
@@ -250,6 +246,12 @@ export interface AuthorProfile {
   total_ventes: number;
   solde_disponible: number;
   verified: boolean;
+  statut: string;
+  identity_document_url: string | null;
+  identity_document_path: string | null;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  rejection_reason: string | null;
   created_at: string;
   updated_at: string;
 }

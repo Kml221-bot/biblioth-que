@@ -1,12 +1,9 @@
-// ============================================================
-// BiblioTech Admin — Gestion du Catalogue (Section A)
-// CRUD livres, filtres, formulaire ajout
-// ============================================================
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Search, Trash2, Edit3, Check, X, BookOpen, Upload, Library, Loader2 } from 'lucide-react';
 import { useAdminBooks, BOOK_CATEGORIES, type AdminBookRow } from './hooks/useAdminData';
+// HMR trigger
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 
@@ -190,16 +187,26 @@ export default function AdminCatalogue() {
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(payload?.message || 'Impossible de preparer l upload.');
 
-    const { error } = await supabase.storage
-      .from(payload.bucket)
-      .uploadToSignedUrl(payload.path, payload.token, selectedBookFile, {
-        contentType: selectedBookFile.type || 'application/pdf',
-        cacheControl: '3600',
-      });
+    // Upload directly via fetch to the signed URL (bypasses RLS)
+    const contentType = selectedBookFile.type || (selectedBookFile.name.toLowerCase().endsWith('.epub') ? 'application/epub+zip' : 'application/pdf');
+    const uploadResponse = await fetch(payload.signedUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': contentType,
+        'Cache-Control': 'max-age=3600',
+        'x-upsert': 'true',
+      },
+      body: selectedBookFile,
+    });
 
-    if (error) throw error;
+    if (!uploadResponse.ok) {
+      const errBody = await uploadResponse.text().catch(() => '');
+      throw new Error(`Upload échoué (${uploadResponse.status}): ${errBody || 'erreur inconnue'}`);
+    }
+
     return payload.publicUrl as string;
   };
+
 
   const handleAdd = async () => {
     if (!newBook.titre || !newBook.auteur) { notify('❌ Titre et auteur requis'); return; }
@@ -208,15 +215,54 @@ export default function AdminCatalogue() {
     try {
       setUploadingBookFile(Boolean(selectedBookFile));
       const uploadedPdfUrl = await uploadSelectedBookFile();
-      const bookToCreate = { ...newBook, pdf_url: uploadedPdfUrl || newBook.pdf_url };
-      await addBook({ ...bookToCreate, added_by: user?.id } as Partial<AdminBookRow>);
+      const finalUrl = uploadedPdfUrl || newBook.pdf_url || newBook.read_url;
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Connexion admin requise.');
+
+      const bookToCreate = {
+        titre: newBook.titre,
+        auteur: newBook.auteur,
+        categorie: newBook.categorie,
+        description: newBook.description || null,
+        prix_achat: Number(newBook.prix_achat) || 0,
+        prix_location: Number(newBook.prix_location) || 0,
+        prix_location_7j: Number(newBook.prix_location) || 0,
+        prix_location_30j: (Number(newBook.prix_location) || 0) * 3,
+        pages_count: Number(newBook.pages_count) || 0,
+        langue: newBook.langue || 'fr',
+        isbn: newBook.isbn || null,
+        status: newBook.status || 'publie',
+        cover_url: newBook.cover_url || null,
+        pdf_url: finalUrl || null,
+        read_url: uploadMode === 'online' ? (newBook.read_url || null) : null,
+        type: newBook.type || 'gratuit',
+        format: newBook.format || 'pdf',
+        type_acces: newBook.type === 'payant' ? 'premium' : 'free',
+        featured: newBook.featured || false,
+        editeur: newBook.editeur || null,
+      };
+
+      const response = await fetch('/api/admin/books', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookToCreate),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload?.message || 'Impossible de créer le livre.');
+
       setShowAdd(false);
-      setNewBook({ titre: '', auteur: '', categorie: BOOK_CATEGORIES[0], type: 'gratuit', format: 'pdf', prix_achat: 0, prix_location: 0, pages_count: 0, langue: 'fr', description: '', pdf_url: '', read_url: '', status: 'publie', cover_url: '', isbn: '', editeur: '', type_acces: 'borrow_or_buy', featured: false });
+      setNewBook({ titre: '', auteur: '', categorie: BOOK_CATEGORIES[0] as string, type: 'gratuit' as string, format: 'pdf' as string, prix_achat: 0, prix_location: 0, pages_count: 0, langue: 'fr', description: '', pdf_url: '', read_url: '', status: 'publie' as string, cover_url: '', isbn: '', editeur: '', type_acces: 'borrow_or_buy' as string, featured: false });
       setUploadMode('local');
       setSelectedBookFile(null);
       fetchBooks();
       notify(`✅ "${newBook.titre}" ajouté au catalogue`);
     } catch (error) {
+      console.error("Error adding book:", error);
       notify(error instanceof Error ? `Erreur : ${error.message}` : '❌ Erreur lors de l\'ajout');
     } finally {
       setUploadingBookFile(false);

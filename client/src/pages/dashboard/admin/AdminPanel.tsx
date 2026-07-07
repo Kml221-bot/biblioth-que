@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Panel Admin (Layout principal)
-// Navigation latérale + sections modulaires
-// ============================================================
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -30,7 +26,7 @@ const SECTIONS: { id: AdminSection; label: string; icon: React.ElementType; desc
   { id: 'catalogue', label: 'Catalogue',        icon: BookOpen,        desc: 'Gestion des livres' },
   { id: 'authors',   label: 'Auteurs',           icon: PenLine,         desc: 'Validation auteurs & livres' },
   { id: 'users',     label: 'Utilisateurs',      icon: Users,           desc: 'Profils et rôles' },
-  { id: 'borrows',   label: 'Emprunts',          icon: BookMarked,      desc: 'Suivi emprunts' },
+  { id: 'borrows',   label: 'Lectures',          icon: BookMarked,      desc: 'Suivi des lectures' },
   { id: 'finances',  label: 'Finances',          icon: DollarSign,      desc: 'Revenus et transactions' },
   { id: 'config',    label: 'Configuration',     icon: Settings,        desc: 'Paramètres plateforme' },
   { id: 'audit',     label: 'Journal d\'audit',  icon: FileText,        desc: 'Historique actions' },

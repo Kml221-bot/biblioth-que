@@ -1,8 +1,3 @@
-// ============================================================
-// BiblioTech — Service de synchronisation offline → online
-// Synchronise les données accumulées hors-ligne quand
-// la connexion revient (progression, notes, sessions)
-// ============================================================
 
 import { supabase } from '@/lib/supabase';
 import {

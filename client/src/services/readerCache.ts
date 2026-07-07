@@ -1,8 +1,3 @@
-// ============================================================
-// BiblioTech — Cache des URLs signées pour accélérer l'ouverture
-// Cache en mémoire avec expiration automatique
-// ============================================================
-
 interface CachedSignedUrl {
   url: string;
   expiresAt: string;

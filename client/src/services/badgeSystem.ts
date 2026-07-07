@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Système de Gamification
-// Badges, niveaux et progression de lecture
-// ============================================================
 
 import { getActiveBorrows, getHistory, type BorrowedBook, type HistoryItem } from './borrowStore';
 

@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Hooks Admin (requêtes Supabase)
-// Centralise toutes les opérations admin sur la base de données
-// ============================================================
 
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
@@ -109,6 +105,7 @@ export const BOOK_CATEGORIES = [
   'Littérature Africaine & Sénégalaise',
   'Économie & Business',
   'Dark Romance & Fiction',
+  'Roman',
   'Aventure',
   'Mangas & Bandes Dessinées',
   'Droit & Sciences Politiques',

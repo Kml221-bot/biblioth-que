@@ -1,9 +1,3 @@
-// ============================================================
-// BiblioTech — Lecteur Unifié Premium (Style Readest)
-// Un seul composant pour PDF et EPUB
-// Design immersif, plein écran, minimaliste
-// ============================================================
-
 import React, { useState, useEffect, useRef, useCallback, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import ePub, { Book, Rendition, Contents } from 'epubjs';

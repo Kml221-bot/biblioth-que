@@ -134,10 +134,10 @@ async function startServer() {
   });
 
   const port = process.env.PORT || 3001;
-  server.listen(port, () => {
-    console.log(`\n🚀 BiblioTech API démarrée sur http://localhost:${port}`);
+  server.listen(Number(port), "0.0.0.0", () => {
+    console.log(`\n🚀 BiblioTech API démarrée sur http://127.0.0.1:${port}`);
     console.log(`🤖 BibliAI: ${process.env.OPENROUTER_API_KEY ? "✅ Configuré" : "❌ Clé manquante"}`);
-    console.log(`📡 Route chat: POST http://localhost:${port}/api/chat\n`);
+    console.log(`📡 Route chat: POST http://127.0.0.1:${port}/api/chat\n`);
   });
 }
 

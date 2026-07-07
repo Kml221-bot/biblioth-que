@@ -1,8 +1,3 @@
-// ============================================================
-// 🎮 BiblioTech — Quiz Data
-// Questions sur livres & culture générale, par niveau
-// ============================================================
-
 export interface QuizQuestion {
   id: string;
   question: string;

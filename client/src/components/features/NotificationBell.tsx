@@ -1,8 +1,3 @@
-// ============================================================
-// BiblioTech — Notification Bell (Header)
-// Sources : API serveur (vrais événements) + alertes locales (emprunts)
-// Persistance de l'état "lu" via localStorage
-// ============================================================
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

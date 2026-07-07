@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Streak de lecture & Badges
-// Composant gamification : flamme, compteur, confetti
-// ============================================================
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

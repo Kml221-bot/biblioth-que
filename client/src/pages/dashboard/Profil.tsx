@@ -393,7 +393,7 @@ export default function Profil() {
           <motion.div variants={itemVariants}>
             <Card>
               <CardBody className="text-center">
-                <p className="text-sm text-muted-foreground mb-2">Livres empruntés</p>
+                <p className="text-sm text-muted-foreground mb-2">Livres lus</p>
                 <p className="text-3xl font-bold text-primary">3</p>
               </CardBody>
             </Card>

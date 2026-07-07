@@ -62,7 +62,7 @@ export default function Historique() {
   const pieData = [
     { name: 'Retournés', value: totalReturned },
     { name: 'En retard', value: overdue },
-    { name: 'Empruntés', value: active },
+    { name: 'En cours de lecture', value: active },
   ].filter(d => d.value > 0);
 
   const getStatusColor = (status: string) => {
@@ -183,7 +183,7 @@ export default function Historique() {
                       <h4 className="font-semibold text-foreground mb-1 truncate">{item.title}</h4>
                       <p className="text-sm text-muted-foreground mb-2 truncate">{item.author}</p>
                       <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                        <span>Emprunté : {new Date(item.borrowDate).toLocaleDateString('fr-FR')}</span>
+                        <span>Commencé : {new Date(item.borrowDate).toLocaleDateString('fr-FR')}</span>
                         <span>Retourné : {new Date(item.returnDate).toLocaleDateString('fr-FR')}</span>
                         <span>Durée : {item.daysKept} jours</span>
                       </div>

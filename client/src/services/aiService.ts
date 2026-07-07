@@ -1,8 +1,3 @@
-// ============================================================
-// BiblioTech — Service IA Frontend (Enhanced)
-// Historique persistant, suggestions intelligentes,
-// recommandations personnalisées "Parce que vous aimez X → Y"
-// ============================================================
 
 import { MOCK_BOOKS } from '@/data/mockBooks';
 import { supabase } from '@/lib/supabase';

@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Page Communautés
-// Groupes d'étude & Clubs de lecture
-// ============================================================
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

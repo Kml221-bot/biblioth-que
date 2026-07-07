@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech Marketplace — Modèle Vinted
-// Le vendeur saisit son prix net, BiblioTech ajoute les frais cote acheteur.
-// ============================================================
 
 export type BookCondition = 'comme-neuf' | 'tres-bon' | 'bon' | 'acceptable';
 export type ListingStatus  = 'active' | 'vendu' | 'reserve';

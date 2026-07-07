@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech Admin — Vue d'ensemble (Overview)
-// Stats globales, alertes, top livres
-// ============================================================
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -14,7 +10,7 @@ export default function AdminOverview() {
   const cards = [
     { icon: BookOpen, label: 'Total livres', value: stats.totalBooks, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/20' },
     { icon: Users, label: 'Utilisateurs', value: stats.totalUsers, color: 'text-emerald-600', bg: 'bg-emerald-100 dark:bg-emerald-900/20' },
-    { icon: BookMarked, label: 'Emprunts actifs', value: stats.activeBorrows, color: 'text-amber-600', bg: 'bg-amber-100 dark:bg-amber-900/20' },
+    { icon: BookMarked, label: 'Lectures en cours', value: stats.activeBorrows, color: 'text-amber-600', bg: 'bg-amber-100 dark:bg-amber-900/20' },
     { icon: AlertTriangle, label: 'En retard', value: stats.overdueBorrows, color: 'text-red-600', bg: 'bg-red-100 dark:bg-red-900/20' },
     { icon: Crown, label: 'Abonnés actifs', value: stats.activeSubscriptions, color: 'text-purple-600', bg: 'bg-purple-100 dark:bg-purple-900/20' },
     { icon: CreditCard, label: 'Revenus ce mois', value: `${stats.revenueMonth.toLocaleString('fr-FR')} F`, color: 'text-green-600', bg: 'bg-green-100 dark:bg-green-900/20' },
@@ -66,7 +62,7 @@ export default function AdminOverview() {
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
           <div className="flex items-center gap-2 text-red-700 dark:text-red-400 font-medium text-sm">
             <AlertTriangle className="w-4 h-4" />
-            {stats.overdueBorrows} emprunt(s) en retard nécessitent une action
+            {stats.overdueBorrows} lecture(s) expirée(s) nécessitent une attention
           </div>
         </div>
       )}

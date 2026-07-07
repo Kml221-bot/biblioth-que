@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Service de stockage hors-ligne (IndexedDB)
-// Gère le cache des livres PDF/ePub pour la lecture offline
-// ============================================================
 
 import { openDB, type IDBPDatabase } from 'idb';
 

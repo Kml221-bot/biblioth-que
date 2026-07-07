@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech Admin — Gestion Emprunts (Section C)
-// ============================================================
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookMarked, Clock, AlertTriangle, CheckCircle, RotateCcw } from 'lucide-react';
@@ -30,7 +26,7 @@ export default function AdminBorrows() {
     try {
       await updateBorrow(id, { statut: 'rendu', fin_reelle: new Date().toISOString() } as any);
       fetchBorrows({ statut: filterStatut || undefined });
-      notify('✅ Emprunt marqué comme rendu');
+      notify('✅ Lecture retirée (marquée comme terminée)');
     } catch { notify('❌ Erreur'); }
   };
 
@@ -40,7 +36,7 @@ export default function AdminBorrows() {
       newDate.setDate(newDate.getDate() + 7);
       await updateBorrow(id, { fin_prevue: newDate.toISOString(), statut: 'prolonge' } as any);
       fetchBorrows({ statut: filterStatut || undefined });
-      notify('✅ Emprunt prolongé de 7 jours');
+      notify('✅ Lecture prolongée de 7 jours');
     } catch { notify('❌ Erreur'); }
   };
 
@@ -80,7 +76,7 @@ export default function AdminBorrows() {
       ) : borrows.length === 0 ? (
         <div className="text-center py-12 bg-card border border-border rounded-xl">
           <BookMarked className="w-10 h-10 mx-auto mb-3 text-muted-foreground/30" />
-          <p className="text-sm text-muted-foreground">Aucun emprunt trouvé</p>
+          <p className="text-sm text-muted-foreground">Aucune lecture trouvée</p>
         </div>
       ) : (
         <div className="space-y-2 max-h-[600px] overflow-y-auto">

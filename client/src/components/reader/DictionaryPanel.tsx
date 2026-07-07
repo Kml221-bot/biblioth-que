@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Dictionnaire et traduction intégrés
-// Sélectionner un mot → définition, traduction, Wikipedia
-// ============================================================
 
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

@@ -6,10 +6,10 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { getAuthorDashboard, registerAsAuthor, fileToDataUrl } from '@/services/authorService';
 
-const BOOK_CATEGORIES = [
+const CATEGORIES = [
   'Informatique & Cybersécurité', 'Développement Personnel', 'Littérature Africaine & Sénégalaise',
-  'Économie & Business', 'Dark Romance & Fiction', 'Aventure',
-  'Mangas & Bandes Dessinées', 'Droit & Sciences Politiques', 'Sciences & Mathématiques',
+  'Économie & Business', 'Dark Romance & Fiction', 'Roman', 'Aventure',
+  'Manga & BD', 'Droit & Sciences Politiques', 'Sciences & Mathématiques',
   'Manuels Universitaires & Annales',
 ];
 

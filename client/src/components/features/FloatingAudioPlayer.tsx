@@ -1,9 +1,3 @@
-// ============================================================
-// BiblioTech — Lecteur audio flottant
-// Persiste entre les navigations — Web Speech API
-// Apparaît dès qu'une lecture audio est en cours.
-// ============================================================
-
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Square, BookOpen, Volume2 } from 'lucide-react';

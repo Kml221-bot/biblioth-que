@@ -235,6 +235,7 @@ model User {
   avatarUrl       String?    @map("avatar_url")
   role            UserRole   @default(STUDENT)
   status          UserStatus @default(ACTIVE)
+  isActive        Boolean    @default(true) @map("is_active")
   referralCode    String?    @unique @map("referral_code")
   coinBalance     Int        @default(0) @map("coin_balance")
   lastLoginAt     DateTime?  @map("last_login_at")
@@ -296,16 +297,22 @@ model Subscription {
 }
 
 model AuthorProfile {
-  id               String       @id @default(uuid()) @db.Uuid
-  userId           String       @unique @map("user_id") @db.Uuid
-  bio              String?
-  status           AuthorStatus @default(PENDING)
-  waveAccount      String?      @map("wave_account")
-  soldeDisponible  Int          @default(0) @map("solde_disponible")
-  commissionPct    Decimal      @default(70.00) @map("commission_pct") @db.Decimal(5, 2)
-  approvedAt       DateTime?    @map("approved_at")
-  createdAt        DateTime     @default(now()) @map("created_at")
-  updatedAt        DateTime     @updatedAt @map("updated_at")
+  id                  String       @id @default(uuid()) @db.Uuid
+  userId              String       @unique @map("user_id") @db.Uuid
+  nomPlume            String       @map("nom_plume")
+  bio                 String?
+  waveNumber          String?      @map("wave_number")
+  status              AuthorStatus @default(PENDING)
+  soldeDisponible     Int          @default(0) @map("solde_disponible")
+  totalVentes         Int          @default(0) @map("total_ventes")
+  verified            Boolean      @default(false)
+  identityDocumentUrl String?      @map("identity_document_url")
+  identityDocumentPath String?     @map("identity_document_path")
+  reviewedBy          String?      @map("reviewed_by") @db.Uuid
+  reviewedAt          DateTime?    @map("reviewed_at")
+  rejectionReason     String?      @map("rejection_reason")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
 
   user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   books Book[]
@@ -320,29 +327,39 @@ model Book {
   titre             String
   auteur            String
   authorProfileId   String?    @map("author_profile_id") @db.Uuid
+  sousCategorie     String?    @map("sous_categorie")
   description       String?
   categorie         String
   filiere           String?
   typeAcces         String?    @default("gratuit") @map("type_acces")
+  type              String?    @default("gratuit")
   status            BookStatus @default(DRAFT)
+  format            String?    @default("pdf")
   isbn              String?
   langue            String     @default("fr")
-  nombrePages       Int?       @map("nombre_pages")
+  editeur           String?
+  anneePublication  Int?       @map("annee_publication")
+  pagesCount        Int?       @map("pages_count")
+  watermarkEnabled  Boolean    @default(true) @map("watermark_enabled")
   coverUrl          String?    @map("cover_url")
-  fileUrl           String?    @map("file_url")
-  extraitUrl        String?    @map("extrait_url")
+  pdfUrl            String?    @map("pdf_url")
+  readUrl           String?    @map("read_url")
+  extract           String?
   prixAchat         Int        @default(2000) @map("prix_achat")
+  prixLocation      Int        @default(0) @map("prix_location")
   prixLocation7j    Int        @default(500) @map("prix_location_7j")
   prixLocation30j   Int        @default(800) @map("prix_location_30j")
   noteMoyenne       Decimal    @default(0.00) @map("note_moyenne") @db.Decimal(3, 2)
   reviewsCount      Int        @default(0) @map("reviews_count")
   nbVues            Int        @default(0) @map("nb_vues")
   nbEmprunts        Int        @default(0) @map("nb_emprunts")
-  featured            Boolean    @default(false)
-  freeChaptersCount   Int        @default(3) @map("free_chapters_count")
-  publishedAt         DateTime?  @map("published_at")
-  createdAt           DateTime   @default(now()) @map("created_at")
-  updatedAt           DateTime   @updatedAt @map("updated_at")
+  featured          Boolean    @default(false)
+  addedBy           String?    @map("added_by") @db.Uuid
+  tags              String[]   @default([])
+  freeChaptersCount Int        @default(3) @map("free_chapters_count")
+  publishedAt       DateTime?  @map("published_at")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
 
   authorProfile  AuthorProfile?       @relation(fields: [authorProfileId], references: [id], onDelete: Cascade)
   reviews        BookReview[]

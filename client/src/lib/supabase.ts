@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Client Supabase
-// Connexion à la base de données Supabase
-// ============================================================
 
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database';

@@ -1,8 +1,3 @@
-// ============================================================
-// BiblioTech — Audio Feedback System
-// Sons synthétiques via Web Audio API (0 fichiers externes)
-// ============================================================
-
 let audioCtx: AudioContext | null = null;
 
 function getCtx(): AudioContext {

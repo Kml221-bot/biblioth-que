@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Bouton d'installation PWA (Add to Home Screen)
-// Affiche un bouton pour installer l'app sur Android/iOS
-// ============================================================
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

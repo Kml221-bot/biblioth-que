@@ -1,9 +1,3 @@
-// ============================================================
-// BiblioTech — SpeechContext
-// Lecture audio globale qui persiste entre les navigations.
-// Web Speech API (SpeechSynthesis) — 100% natif, gratuit.
-// ============================================================
-
 import React, { createContext, useCallback, useContext, useRef, useState } from 'react';
 
 export interface SpeechTrack {

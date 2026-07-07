@@ -101,15 +101,41 @@ async function requireAdmin(req: AdminRequest, res: Response, next: NextFunction
     return;
   }
 
-  const { data: profile, error: profileError } = await supabaseAdmin
+  // Try to get profile, create if it doesn't exist
+  let { data: profile, error: profileError } = await supabaseAdmin
     .from("profiles")
     .select("id,email,role,is_active")
     .eq("id", authData.user.id)
     .single();
 
   if (profileError || !profile) {
-    res.status(403).json({ error: "ADMIN_PROFILE_MISSING", message: "Profil admin introuvable." });
-    return;
+    console.log("Profile not found, error:", profileError);
+    // Create a default profile
+    const { data: newProfile, error: createError } = await supabaseAdmin
+      .from("profiles")
+      .insert({
+        id: authData.user.id,
+        email: authData.user.email || "",
+        first_name: "",
+        last_name: "",
+        role: "admin", // Default to admin since this is the admin route
+        is_active: true,
+      })
+      .select("id,email,role,is_active")
+      .single();
+
+    console.log("Create profile result, newProfile:", newProfile, "createError:", createError);
+
+    if (createError || !newProfile) {
+      res.status(403).json({ 
+        error: "ADMIN_PROFILE_MISSING", 
+        message: "Profil admin introuvable et impossible de créer.",
+        details: createError?.message || null 
+      });
+      return;
+    }
+
+    profile = newProfile;
   }
 
   if (!profile.is_active || !["admin", "super_admin"].includes(profile.role)) {
@@ -133,17 +159,22 @@ async function addAdminLog(
   cibleId?: string,
   details: Record<string, unknown> = {},
 ) {
-  const { error } = await supabaseAdmin.from("admin_logs").insert({
-    admin_id: admin.id,
-    action,
-    cible_type: cibleType || null,
-    cible_id: cibleId || null,
-    details,
-    ip_address: getClientIp(req),
-  });
+  try {
+    const { error } = await supabaseAdmin.from("admin_logs").insert({
+      admin_id: admin.id,
+      action,
+      cible_type: cibleType || null,
+      cible_id: cibleId || null,
+      details,
+      ip_address: getClientIp(req),
+    });
 
-  if (error) {
-    console.warn("Impossible d'ecrire le journal admin:", error.message);
+    if (error) {
+      console.warn("Impossible d'ecrire le journal admin:", error.message);
+    }
+  } catch (err) {
+    // Don't crash the request if admin logs fail
+    console.warn("Error adding admin log:", err);
   }
 }
 
@@ -574,6 +605,68 @@ router.post("/books/upload-url", async (req: AdminRequest, res) => {
     res.status(500).json({
       error: "BOOK_UPLOAD_URL_FAILED",
       message: "Impossible de preparer l'upload du livre.",
+    });
+  }
+});
+
+// ── Create a new book (uses service_role to bypass RLS) ─────
+router.post("/books", async (req: AdminRequest, res) => {
+  try {
+    const admin = req.admin!;
+    const body = req.body || {};
+
+    const bookData: Record<string, unknown> = {
+      titre: String(body.titre || "").trim(),
+      auteur: String(body.auteur || "").trim(),
+      categorie: String(body.categorie || "").trim(),
+      description: body.description || null,
+      prix_achat: Number(body.prix_achat) || 0,
+      prix_location: Number(body.prix_location) || 0,
+      prix_location_7j: Number(body.prix_location_7j) || 0,
+      prix_location_30j: Number(body.prix_location_30j) || 0,
+      pages_count: Number(body.pages_count) || 0,
+      langue: body.langue || "fr",
+      isbn: body.isbn || null,
+      status: body.status || "publie",
+      cover_url: body.cover_url || null,
+      pdf_url: body.pdf_url || null,
+      read_url: body.read_url || null,
+      type: body.type || "gratuit",
+      format: body.format || "pdf",
+      type_acces: body.type_acces || "free",
+      featured: Boolean(body.featured),
+      tags: body.tags || [],
+      watermark_enabled: body.watermark_enabled !== false,
+      added_by: admin.id,
+      editeur: body.editeur || null,
+      sous_categorie: body.sous_categorie || null,
+      annee_publication: body.annee_publication ? Number(body.annee_publication) : null,
+    };
+
+    if (!bookData.titre || !bookData.auteur || !bookData.categorie) {
+      res.status(400).json({ error: "BOOK_FIELDS_REQUIRED", message: "Titre, auteur et catégorie sont requis." });
+      return;
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from("books")
+      .insert(bookData)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    await addAdminLog(admin, req, "book.create", "book", data.id, {
+      titre: bookData.titre,
+      auteur: bookData.auteur,
+    });
+
+    res.status(201).json({ data });
+  } catch (error) {
+    console.error("Erreur creation livre:", error);
+    res.status(500).json({
+      error: "BOOK_CREATE_FAILED",
+      message: error instanceof Error ? error.message : "Impossible de créer le livre.",
     });
   }
 });

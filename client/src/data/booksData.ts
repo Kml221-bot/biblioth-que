@@ -37,6 +37,12 @@ export const bookCategories: BookCategory[] = [
     query: 'dark romance roman romance',
   },
   {
+    id: 'roman',
+    label: 'Roman',
+    emoji: '📖',
+    query: 'roman fiction littérature classique',
+  },
+  {
     id: 'manga-bd',
     label: 'Manga & BD',
     emoji: '📚',

@@ -1,9 +1,3 @@
-// ============================================================
-// BiblioTech — Service NestJS API
-// Toutes les routes qui passent par le backend NestJS (port 3002)
-// sont proxiées automatiquement par Vite en développement.
-// ============================================================
-
 import { supabase } from '@/lib/supabase';
 
 async function getAuthHeaders(): Promise<Record<string, string>> {

@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Panneau d'annotations EPUB
-// Liste tous les surlignages et notes, organisés par chapitre
-// ============================================================
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

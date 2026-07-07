@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Hooks Communautés (Supabase)
-// CRUD communautés, membres, notes partagées
-// ============================================================
 
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';

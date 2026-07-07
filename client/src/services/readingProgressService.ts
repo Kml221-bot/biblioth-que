@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Service de progression de lecture (Supabase)
-// Sauvegarde et récupère la progression en temps réel
-// ============================================================
 
 import { supabase } from '@/lib/supabase';
 

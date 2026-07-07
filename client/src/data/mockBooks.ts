@@ -1,8 +1,5 @@
 import { GoogleBook } from '../services/googleBooksService';
 
-// ============================================================
-// 🌍 LITTÉRATURE AFRICAINE & SÉNÉGALAISE
-// ============================================================
 export const AFRICAN_BOOKS: GoogleBook[] = [
   {
     id: 'af-001',
@@ -297,9 +294,6 @@ Ce combat avait amené la réputation d'Okonkwo dans les villages. Cela se passa
   },
 ];
 
-// ============================================================
-// ⛩️ MANGA & BANDES DESSINÉES
-// ============================================================
 export const MANGA_BOOKS: GoogleBook[] = [
   {
     id: 'mg-001',
@@ -457,9 +451,6 @@ Il se précipita et découvrit l'impensable. Sa famille avait été massacrée. 
   },
 ];
 
-// ============================================================
-// 📚 CLASSIQUES INTERNATIONAUX (conservés)
-// ============================================================
 export const CLASSIC_BOOKS: GoogleBook[] = [
   {
     id: 'cl-001',
@@ -526,9 +517,6 @@ J'ai alors beaucoup réfléchi sur les aventures de la jungle et, à mon tour, j
   },
 ];
 
-// ============================================================
-// 📖 CATALOGUE COMPLET — Toutes les catégories réunies
-// ============================================================
 export const MOCK_BOOKS: GoogleBook[] = [
   ...AFRICAN_BOOKS,
   ...MANGA_BOOKS,

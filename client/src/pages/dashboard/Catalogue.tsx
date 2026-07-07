@@ -112,19 +112,8 @@ export default function Catalogue() {
   }, []);
 
   const handleBorrow = useCallback(async (book: GoogleBook) => {
-    if (!user?.id) {
-      showToast('Connecte-toi pour emprunter un livre.', 'warning');
-      return;
-    }
-
-    try {
-      await borrowBookInSupabase(user.id, book.id);
-      showToast(`Vous avez emprunté "${book.title}" avec succès ! 📚`, 'success');
-      window.dispatchEvent(new Event('borrowsUpdated'));
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Erreur', 'error');
-    }
-  }, [showToast, user?.id]);
+    // This is no longer used, kept for compatibility if BookViewer still needs it
+  }, []);
 
   const isSearchActive = debouncedSearch.trim().length > 0;
   const totalBooks = allBooks.length;

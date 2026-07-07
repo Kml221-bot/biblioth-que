@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech — Mode Lecture (Page complète)
-// Lecteur PDF intégré + extraits + notes + progression Supabase
-// ============================================================
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

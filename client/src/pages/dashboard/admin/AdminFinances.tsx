@@ -1,7 +1,3 @@
-// ============================================================
-// BiblioTech Admin — Finances (Section D)
-// Revenus, transactions, abonnements
-// ============================================================
 
 import React from 'react';
 import { CreditCard, TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react';

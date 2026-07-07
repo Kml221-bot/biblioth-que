@@ -1,8 +1,3 @@
-// ============================================================
-// BiblioTech — Book Cover Card
-// Style Apple Books / iOS : dos de livre, pages empilées,
-// brillance diagonale, ombre portée, typographie soignée.
-// ============================================================
 
 import React from 'react';
 
@@ -36,6 +31,10 @@ const CATEGORY_THEMES: Record<string, CoverTheme> = {
   'Dark Romance & Fiction': {
     from: '#4c0519', via: '#9f1239', to: '#881337',
     spine: '#27041a', accent: '#fda4af', emoji: '🌹',
+  },
+  'Roman': {
+    from: '#D2B48C', via: '#b3906a', to: '#8B4513',
+    spine: '#5d2e0d', accent: '#FFF8DC', emoji: '📖',
   },
   'Aventure': {
     from: '#1a2e05', via: '#365314', to: '#166534',
@@ -129,114 +128,68 @@ export const BookCoverPlaceholder: React.FC<BookCoverPlaceholderProps> = ({
 
         {/* ── Couverture principale ──────────────────────────────── */}
         <div
-          className="flex-1 relative overflow-hidden"
+          className="flex-1 relative overflow-hidden flex flex-col"
           style={{
-            background: `linear-gradient(145deg, ${theme.from}, ${theme.via} 55%, ${theme.to})`,
+            background: `linear-gradient(150deg, ${theme.from}, ${theme.to})`,
           }}
         >
-          {/* Texture grille très discrète */}
-          <svg
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            style={{ opacity: 0.045 }}
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <pattern
-                id={`bg-grid-${id}`}
-                width="16"
-                height="16"
-                patternUnits="userSpaceOnUse"
-              >
-                <path d="M 16 0 L 0 0 0 16" fill="none" stroke={theme.accent} strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill={`url(#bg-grid-${id})`} />
-          </svg>
-
-          {/* Brillance diagonale (reflet iOS) */}
+          {/* Brillance douce de gauche à droite (Effet de volume du livre) */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background:
-                'linear-gradient(130deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.06) 30%, transparent 55%)',
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.15) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.15) 100%)',
             }}
           />
 
-          {/* Contenu */}
-          <div className={`relative z-10 h-full flex flex-col ${isSm ? 'p-1.5' : 'p-3'}`}>
+          {/* Espace vide en haut */}
+          <div className={`${isSm ? 'h-4' : 'h-10'}`}></div>
 
-            {/* Haut : emoji + points déco */}
-            <div className={`flex justify-between items-start ${isSm ? 'mb-1' : 'mb-2'}`}>
-              <span className={`${isSm ? 'text-[9px]' : 'text-sm'} opacity-40`}>{theme.emoji}</span>
-              {!isSm && (
-                <div className="flex gap-[3px] mt-0.5">
-                  {[0.4, 0.25, 0.15].map((o, i) => (
-                    <div
-                      key={i}
-                      className="w-[3px] h-[3px] rounded-full"
-                      style={{ background: theme.accent, opacity: o }}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Centre : titre */}
-            <div className="flex-1 flex items-center">
-              <div className="w-full">
-                <div
-                  className={`${isSm ? 'w-4 h-[1.5px] mb-1' : 'w-7 h-[2px] mb-2'} rounded-full`}
-                  style={{ background: theme.accent, opacity: 0.75 }}
-                />
-                <h4
-                  className={`font-bold text-white leading-snug ${isSm ? 'text-[7px] line-clamp-3' : 'text-[11px] line-clamp-5'}`}
-                  style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-                >
-                  {isSm ? truncate(title, 30) : title}
-                </h4>
-              </div>
-            </div>
-
-            {/* Bas : auteur + badge BiblioTech */}
-            <div className={`${isSm ? 'mt-1' : 'mt-2'} space-y-1`}>
-              <div
-                className="w-full h-px rounded-full"
-                style={{
-                  background: `linear-gradient(to right, ${theme.accent}70, transparent)`,
-                }}
-              />
-              <p
-                className={`text-white/55 uppercase tracking-widest font-medium truncate ${isSm ? 'text-[5px]' : 'text-[8px]'}`}
-              >
-                {isSm ? truncate(author, 18) : truncate(author, 28)}
-              </p>
-              {!isSm && (
-                <div
-                  className="inline-flex px-1.5 py-0.5 rounded-sm"
-                  style={{
-                    background: 'rgba(255,255,255,0.07)',
-                    border: `1px solid ${theme.accent}25`,
-                  }}
-                >
-                  <span
-                    className="text-[5px] uppercase tracking-[0.2em] font-bold"
-                    style={{ color: `${theme.accent}80` }}
-                  >
-                    BiblioTech
-                  </span>
-                </div>
-              )}
-            </div>
+          {/* Bande de texte (titre et auteur) */}
+          <div className="w-full relative z-10" style={{ backgroundColor: 'rgba(255,255,255,0.25)' }}>
+             <div className={`${isSm ? 'px-2 py-1.5' : 'px-4 py-4'}`}>
+               <h4 
+                 className={`font-bold leading-snug uppercase text-sans ${isSm ? 'text-[7px] line-clamp-3' : 'text-sm line-clamp-4'}`}
+                 style={{ color: theme.spine }}
+               >
+                 {title}
+               </h4>
+               <p 
+                 className={`${isSm ? 'mt-0.5 text-[6px]' : 'mt-1 text-[11px]'} font-normal`}
+                 style={{ color: theme.spine, opacity: 0.9 }}
+               >
+                 {author}
+               </p>
+             </div>
           </div>
 
-          {/* Vignette bas (assombrit le bas de la couverture) */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                'linear-gradient(to top, rgba(0,0,0,0.38) 0%, transparent 45%)',
-            }}
-          />
+          {/* Décoratif au centre/bas */}
+          <div className="absolute bottom-0 right-0 left-0 flex justify-center items-end pointer-events-none" style={{ opacity: 0.45 }}>
+            <svg 
+              className={`transform ${isSm ? 'translate-y-1' : 'translate-y-2'}`}
+              width={isSm ? "90%" : "85%"} 
+              height="auto" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke={theme.accent} 
+              strokeWidth={isSm ? "0.4" : "0.25"}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {category?.includes('Informatique') ? (
+                <>
+                  <circle cx="12" cy="12" r="2.5" />
+                  <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(45 12 12)" />
+                  <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(-45 12 12)" />
+                  <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(90 12 12)" />
+                </>
+              ) : (
+                <path d="M12 22C12 22 11 16 7 14C3 12 2 8 2 8C2 8 6 9 9 11C11.5 12.6 12 16 12 16M12 22C12 22 13 16 17 14C21 12 22 8 22 8C22 8 18 9 15 11C12.5 12.6 12 16 12 16M12 22C12 22 9 17 9 12C9 7 12 2 12 2C12 2 15 7 15 12C15 17 12 22 12 22Z" />
+              )}
+            </svg>
+          </div>
+          
+          {/* Ombre et finition sur les bords de la couverture */}
+          <div className="absolute inset-0 pointer-events-none shadow-[inset_0_-10px_20px_rgba(0,0,0,0.1)]" />
         </div>
 
         {/* ── Tranche pages (côté droit) ────────────────────────── */}
