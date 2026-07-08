@@ -79,6 +79,89 @@ function truncate(text: string, max: number) {
   return text.length > max ? text.slice(0, max - 1) + '…' : text;
 }
 
+function getCategoryGraphic(category?: string, id?: string | number) {
+  const hash = String(id || 'x').split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const flowerIndex = hash % 4;
+
+  const flowers = [
+    // 0: Bourgeon (Bud) très délicat
+    <g key="bourgeon">
+      <path d="M12 22V10" stroke="currentColor" fill="none" />
+      <path d="M12 16C8 16 6 14 6 12C8 14 11 15 12 16Z" fill="currentColor" stroke="none" />
+      <path d="M12 10C9 8 8 5 10 2C12 3 14 3 14 2C16 5 15 8 12 10Z" fill="currentColor" stroke="none" />
+    </g>,
+
+    // 1: Fleur de cerisier (Cherry Blossom)
+    <g key="cerisier">
+      <g fill="currentColor" stroke="none">
+        <path d="M12 12 C 8 7, 10 2, 12 4 C 14 2, 16 7, 12 12Z" />
+        <path d="M12 12 C 8 7, 10 2, 12 4 C 14 2, 16 7, 12 12Z" transform="rotate(72 12 12)" />
+        <path d="M12 12 C 8 7, 10 2, 12 4 C 14 2, 16 7, 12 12Z" transform="rotate(144 12 12)" />
+        <path d="M12 12 C 8 7, 10 2, 12 4 C 14 2, 16 7, 12 12Z" transform="rotate(216 12 12)" />
+        <path d="M12 12 C 8 7, 10 2, 12 4 C 14 2, 16 7, 12 12Z" transform="rotate(288 12 12)" />
+      </g>
+      <circle cx="12" cy="12" r="1.5" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+    </g>,
+
+    // 2: Tulipe (Tulip)
+    <g key="tulipe">
+      <path d="M12 22V12" stroke="currentColor" fill="none" />
+      <path d="M12 18 C 8 18, 5 15, 6 10 C 8 13, 10 15, 12 18 Z" fill="currentColor" stroke="none" />
+      <path d="M12 16 C 16 16, 19 13, 18 8 C 16 11, 14 13, 12 16 Z" fill="currentColor" stroke="none" />
+      <path d="M7 11 C 7 15, 10 16, 12 16 C 14 16, 17 15, 17 11 C 17 4, 15 2, 15 2 C 14 5, 13 8, 12 8 C 11 8, 10 5, 9 2 C 9 2, 7 4, 7 11 Z" fill="currentColor" stroke="none" />
+    </g>,
+
+    // 3: Hibiscus
+    <g key="hibiscus">
+      <g fill="currentColor" stroke="none">
+        <path d="M12 12 C 4 10, 6 2, 12 3 C 18 2, 20 10, 12 12Z" />
+        <path d="M12 12 C 4 10, 6 2, 12 3 C 18 2, 20 10, 12 12Z" transform="rotate(72 12 12)" />
+        <path d="M12 12 C 4 10, 6 2, 12 3 C 18 2, 20 10, 12 12Z" transform="rotate(144 12 12)" />
+        <path d="M12 12 C 4 10, 6 2, 12 3 C 18 2, 20 10, 12 12Z" transform="rotate(216 12 12)" />
+        <path d="M12 12 C 4 10, 6 2, 12 3 C 18 2, 20 10, 12 12Z" transform="rotate(288 12 12)" />
+      </g>
+      <path d="M12 12 L 7 6" stroke="currentColor" strokeWidth="0.75" fill="none" />
+      <circle cx="6.5" cy="5.5" r="1" fill="currentColor" stroke="none" />
+      <circle cx="8" cy="4.5" r="0.5" fill="currentColor" stroke="none" />
+    </g>
+  ];
+
+  const defaultFlower = flowers[flowerIndex];
+
+  if (!category) return defaultFlower;
+
+  if (category.includes('Informatique')) return (
+    <>
+      <circle cx="12" cy="12" r="2.5" />
+      <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(45 12 12)" />
+      <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(-45 12 12)" />
+      <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(90 12 12)" />
+    </>
+  );
+
+  if (category.includes('Littérature')) return (
+    <path d="M12 22C12 22 11 16 7 14C3 12 2 8 2 8C2 8 6 9 9 11C11.5 12.6 12 16 12 16M12 22C12 22 13 16 17 14C21 12 22 8 22 8C22 8 18 9 15 11C12.5 12.6 12 16 12 16M12 22C12 22 9 17 9 12C9 7 12 2 12 2C12 2 15 7 15 12C15 17 12 22 12 22Z" />
+  );
+
+  if (category.includes('Droit')) return (
+    <g fill="currentColor" stroke="none">
+      {/* Base et Pilier */}
+      <path d="M10 2h4v2h-4zM11 4h2v15h-2zM8 19h8v1H8zM5 20h14v2H5z" />
+      {/* Bras */}
+      <path d="M3 6h18v1.5H3z" />
+      {/* Plateau Gauche */}
+      <path d="M4 7.5l-3 7h1l2-4.5l2 4.5h1l-3-7z" opacity="0.6"/>
+      <path d="M0 14.5h8l-2 3h-4z" />
+      {/* Plateau Droit */}
+      <path d="M20 7.5l-3 7h1l2-4.5l2 4.5h1l-3-7z" opacity="0.6"/>
+      <path d="M16 14.5h8l-2 3h-4z" />
+    </g>
+  );
+
+  // Pour toutes les autres catégories (Développement Personnel, Dark Romance...), on utilise les jolies fleurs 3D
+  return defaultFlower;
+}
+
 // ─── Composant ────────────────────────────────────────────────
 interface BookCoverPlaceholderProps {
   title: string;
@@ -162,8 +245,8 @@ export const BookCoverPlaceholder: React.FC<BookCoverPlaceholderProps> = ({
              </div>
           </div>
 
-          {/* Décoratif au centre/bas */}
-          <div className="absolute bottom-0 right-0 left-0 flex justify-center items-end pointer-events-none" style={{ opacity: 0.45 }}>
+          {/* Décoratif au centre/bas avec effet 3D */}
+          <div className="absolute bottom-0 right-0 left-0 flex justify-center items-end pointer-events-none" style={{ opacity: 0.85 }}>
             <svg 
               className={`transform ${isSm ? 'translate-y-1' : 'translate-y-2'}`}
               width={isSm ? "90%" : "85%"} 
@@ -174,17 +257,11 @@ export const BookCoverPlaceholder: React.FC<BookCoverPlaceholderProps> = ({
               strokeWidth={isSm ? "0.4" : "0.25"}
               strokeLinecap="round"
               strokeLinejoin="round"
+              style={{
+                filter: 'drop-shadow(0px 4px 3px rgba(0,0,0,0.5)) drop-shadow(0px 1px 2px rgba(0,0,0,0.3))'
+              }}
             >
-              {category?.includes('Informatique') ? (
-                <>
-                  <circle cx="12" cy="12" r="2.5" />
-                  <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(45 12 12)" />
-                  <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(-45 12 12)" />
-                  <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(90 12 12)" />
-                </>
-              ) : (
-                <path d="M12 22C12 22 11 16 7 14C3 12 2 8 2 8C2 8 6 9 9 11C11.5 12.6 12 16 12 16M12 22C12 22 13 16 17 14C21 12 22 8 22 8C22 8 18 9 15 11C12.5 12.6 12 16 12 16M12 22C12 22 9 17 9 12C9 7 12 2 12 2C12 2 15 7 15 12C15 17 12 22 12 22Z" />
-              )}
+              {getCategoryGraphic(category, id)}
             </svg>
           </div>
           
